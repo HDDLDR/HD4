@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta  charset="utf-8">
+	<title>项目一的数据管理系统</title>
+	<style>
+		*{margin:0;padding:0;list-style:none;
+            font-family:"microsoft yahei";
+            text-decoration: none;}
+        body{color: #333;}
+    #typeList{width: 20%;height: 100vh;transition: 0.5s;
+                background:#2B3946;
+                position: fixed;
+                top:0;left:0;z-index: 100; }
+    #typeList li{height:12vh;line-height: 12vh;color: #16B398;
+                 font-size: 1.5vw;cursor: pointer;text-align: center;transition:0.3s}
+    #typeList .me_1,#typeList .meShow{background: #16B398;color: #fff;}
+    #messages{position: absolute;right: 0;transition: 0.5s;
+                    top:0;height:100%;width: 80%;background: pink}
+    #messages div{width: 100%;height: 200%;position: absolute;
+                     top:0;left: 0;display: none}
+    #messages #msg1{background: skyblue;z-index:80;display: block}
+    #messages #msg2{background: orange;z-index:70}
+    #messages #msg3{background: pink;z-index:60}
+
+
+    button{border: none;outline:none;cursor: pointer;}
+     .msgList{margin: 5vh auto;width: 90%;}
+     .msgList li{overflow: hidden;height:10vh;}
+     .msgList li h2{height:100%;line-height: 10vh;font-size: 1.3vw;width: 20%;float: left;text-align: center;
+                                background:#2B3946; color: #fff;font-weight: normal;border-right:1px solid #ddd;
+                                box-sizing: border-box}
+      .msgList li h2:nth-last-child(1){border: none}
+     .msgList li p{width:20%;height:100%;float: left;transition: 0.2s;
+                   display: flex;justify-content: center;align-items: center;
+                   overflow: auto;font-size: 1.2vw; border:0.05vw solid #333;box-sizing: border-box}
+        .add{background: #16B398;color: #fff;cursor: pointer; float: right;margin-top: 1vh;color: #fff;padding: 2vh 1vw;}
+        .add:active{transform:scale(1.05)}
+        .msgList li p button{padding: 1vh 1vw;box-sizing: border-box;font-size: 1.2vw;}
+     .msgList li p button.save{background:#16B398; }
+     .msgList li p button.dele{background:red; }
+     .msgList li p button.modify{background:deepskyblue; }
+     .msgList li .print{background: #16B398;color: white; }
+
+
+
+
+
+    </style>
+    <script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<input type="text" id="txt" placeholder="_title" >
+        <ul id="typeList">
+            <!--<li class="meShow">首页</li>-->
+            <!--<li>学校概况</li>-->
+            <!--<li>师资队伍</li>-->
+            <!--<li>人才培养</li>-->
+            <!--<li>学术科研</li>-->
+            <!--<li>校内新闻</li>-->
+        </ul>
+    <div id="messages">
+        <div id="msg1">
+            <ul class="msgList msgList_A">
+                <li><button class="add" name="add" onclick="Add('A')">添加新信息</button></li>
+                <li>
+                    <h2>班级</h2>
+                    <h2>编号</h2>
+                    <h2>姓名</h2> 
+                    <h2>手机</h2>
+                    <h2>修改</h2>
+                </li>
+            </ul>
+        </div>
+        <div id="msg2">
+            <ul class="msgList msgList_B">
+                <li><button class="add" name="add" onclick="Add('B')">添加新信息</button></li>
+                <li>
+                    <h2>班级</h2>
+                    <h2>编号</h2>
+                    <h2>姓名</h2>
+                    <h2>手机</h2>
+                    <h2>修改</h2>
+                </li></ul>
+        </div>
+        <div id="msg3">
+            <ul class="msgList msgList_C">
+                <li><button class="add" name="add" onclick="Add('C')">添加新信息</button></li>
+                <li>
+                    <h2>班级</h2>
+                    <h2>编号</h2>
+                    <h2>姓名</h2>
+                    <h2>手机</h2>
+                    <h2>修改</h2>
+                </li></ul>
+        </div>
+    </div>
+
+
+
+
+
+
+<script>
+            var orADD=false;
+            $.ajax({
+                type:'get',
+                url:'http://localhost:3000/datas',
+                async:true,
+                success:function (x) {
+                            console.log(x);
+                    for(var c of x){
+//                        console.log(c);
+                        $(`#typeList`).append(`<li class="me_${c.uid}">${c.navList}</li>`);
+
+                    }
+                }
+            });
+
+
+            //添加信息
+            function Add(x) {
+                        orADD=true;
+                    $(`#messages div .msgList_${x}`).append(`<li>
+                        <p  class="uid_2">${x}</p>
+                        <p>uName</p>
+                        <p>uid</p>
+                        <p>uPhone</p>
+                         <p>
+                             <button class="modify" name="modify" onclick="Modify($(this))">修改</button>
+                             <button class="save"  name="save" onclick="Save($(this))">保存</button>
+                             <button class="dele"  name="dele" onclick="Dele($(this))">删除</button>
+                         </p>
+                     </li>`);
+            }
+
+        //分页
+        $('#typeList li').click(function () {
+            alert($(this).index());
+            var k=$(this).index();
+            $(this).addClass('meShow').siblings().removeClass('meShow');
+//            $('#messages div').eq(k).css('display','block').siblings().stop().css('display','none');
+        });
+
+
+      var Obj={};
+            //删除信息
+            function Dele(x) {
+            //            console.log(x);
+                        Obj=x;
+            //       console.log(typeof Obj);
+                Obj.parent('p').parent('li').remove();
+                doSomthing(Obj);
+            }
+
+            //修改信息  modify修改
+            function Modify(x) {
+            //                console.log(x);
+                                 Obj=x;
+            //                console.log(Obj.parent('p').index());
+                Obj.parent('p').parent('li').children(`p:lt(${Obj.parent('p').index()})`).attr('contenteditable',true);
+                $('.msgList li p').focus(function () {
+                   $(this).addClass('print').siblings().removeClass('print');
+                })
+            }
+
+
+
+            //修改后保存信息
+             function Save(x) {
+            //                    console.log(x);
+                 Obj=x;
+            //     console.log(Obj.parent('p').index());
+                 var k=Obj.parent('p').index();
+                Obj.parent('p').parent('li').children(`p:lt(${k})`).removeAttr('contenteditable');
+                Obj.parent('p').parent('li').children(`p:lt(${k})`)
+                    .text(function(i,origText){
+                        var str= `Old text:${origText} New text: Hello world!(index:${i})`;
+                    });
+                 $('.msgList li p').removeClass('print');
+//                 console.log(Obj.attr('name'));
+//                 console.log(Obj.parent('p').parent('li').children('p:eq(1)').text());
+                 doSomthing(Obj);
+            }
+
+
+
+
+
+
+
+
+
+
+
+//        add.onclick= dele.onclick= find.onclick=  set.onclick=
+        function doSomthing(Obj){
+//            console.log(Obj);
+//            console.log(Obj.attr('name'));
+//            console.log(Obj.parent('p').parent('li').children('p:eq(1)').text());
+//                console.log(orADD);
+            var S1=Obj.parent('p').parent('li').children('p:eq(0)').text();
+            var S2=Obj.parent('p').parent('li').children('p:eq(1)').text();
+            var S3=Obj.parent('p').parent('li').children('p:eq(2)').text();
+            var S4=Obj.parent('p').parent('li').children('p:eq(3)').text();
+            $.ajax({
+                    type:'post',
+                    url:'http://localhost:3000/msg',
+                    async:true,
+                    data:{
+                        'uClass':S1,
+                        'uid':S2,
+                        'uname':S3,
+                        'uphone':S4,
+                        'does':Obj.attr('name'),
+                        'orADD':orADD
+                    },
+                    success:function (x) {
+                        console.log(x);
+                        orADD=false;
+                        S1=S2=S3=S4='';
+                    }
+                });
+        }
+
+
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

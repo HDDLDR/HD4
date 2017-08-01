@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图片上传</title>
+		<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+        <style>
+            img{width:20vw;height: 30vh;-webkit-filter:saturate(1.2);margin:0 2vw 3vh 0;
+                    box-shadow:0 0 5vh rgba(0,0,0,.3);background: skyblue}
+            #photo{margin: 50px auto;}
+        </style>
+	</head>
+	<body>
+
+		<input type="file" accept="image/*" onchange="setFiles(this)" multiple >
+		<button id="upload">上传</button>
+		<button id="show">展示图片</button>
+
+
+        <div id="photo"></div>
+
+
+<script>
+
+
+		var files;
+		  var setFiles=function(element){
+		  	console.log(element.files);
+		  	files=element.files[0];
+		  	console.log(files);
+		  }
+			$('#upload').click(function(){
+				var fd=new FormData();  //表单处理数据的方法
+				fd.append('uploadedFile',files); //用append方法以键值对的方式保存
+//                    console.log(fd);        //===>  FormData {}
+
+//                console.log(files.name, files.size);
+                    $.ajax({
+                                type:"post",
+                                url:"http://localhost:3000/img",
+                                async:true,
+                                data:fd,
+//                                data:{
+//                                    'pame':files.name,
+//                                    'psize':files.size
+//                                },
+                                contentType:false,
+                                processData:false,
+                                success:function(e){
+                                    // console.log(e);
+                                    //获取图片
+                                    $.ajax({
+                                        type:"get",
+                                        url:"http://localhost:3000/img/pic",
+                                        async:true,
+                                        success:function(e){
+                                            console.log(e);
+                                            // for(var i=0;i<e.length;i++){
+                                                // console.log(e[i].picURL);
+                                                $('#photo').append(`<img src="${e[e.length-1].picURL}"/>`);
+                                            // }
+                                        }
+                                    });
+
+                                }
+                            });
+})
+
+
+
+
+
+		$('#show').click(function () {
+            //获取图片
+            $.ajax({
+                type:"get",
+                url:"http://localhost:3000/img/pic",
+                async:true,
+                success:function(e){
+                    console.log(e);
+                    for(var i=0;i<e.length;i++){
+                        console.log(e[i].picURL);
+                        $('#photo').append(`<img src="${e[i].picURL}"/>`);
+                    }
+                }
+            });
+        })
+
+
+</script>
+	</body>
+</html>

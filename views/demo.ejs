@@ -1,0 +1,116 @@
+
+<style>
+		*{margin:0;padding:0;list-style:none;
+            font-family:"microsoft yahei";
+            text-decoration: none;}
+        h1{color:lime;}
+
+
+</style>
+
+<!-- 模板引擎-->
+<!--<h1>哈哈</h1>-->
+
+<!--<ul>-->
+	<!--<li>111</li>-->
+	<!--<li>555</li>-->
+<!--</ul>-->
+
+
+
+
+    <h1><%= title %></h1>
+    <h2>我是/users的渲染模板demo  <%= message %></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table id="myTable" border="1" cellpadding=0  cellspacing=0>
+			<tr>
+				<th>001</th>
+				<td>Row 1</td>
+				<td>
+					<input type="button" value="删除" onclick="deleteRow(this)">
+					<input type="button" value="向下" onclick="moveDown(this)">
+				</td>
+			</tr>
+			<tr>
+				<th>002</th>
+				<td>Row 2</td>
+				<td>
+					<input type="button" value="删除" onclick="deleteRow(this)">
+				</td>
+			</tr>
+			<tr>
+				<th>003</th>
+				<td>Row 3</td>
+				<td>
+					<input type="button" value="删除" onclick="deleteRow(this)">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="text" id="No">
+				</td>
+				<td>
+					<input type="text" id="name">
+				</td>
+				<td>
+					<input type="button" value="插入新行" onclick="insRow()" />
+				</td>
+			</tr>
+		</table>
+
+		<script>
+			function deleteRow(r) {
+				var i = r.parentNode.parentNode.rowIndex; //行对象的索引属性
+				document.getElementById('myTable').deleteRow(i);
+			}
+
+			function insRow() {
+				var tab = document.getElementById("myTable");
+				var linenum = tab.rows.length;
+				var newline = tab.insertRow(linenum - 1);
+				var No = document.getElementById("No").value;
+				var name = document.getElementById("name").value;
+				var th = document.createElement("th");
+				th.innerHTML = No;
+				newline.appendChild(th);
+				var newcol1 = newline.insertCell(1);
+				newcol1.innerHTML = name;
+				var newcol2 = newline.insertCell(2);
+				newcol2.innerHTML = "<input type='button' value='删除' onclick='deleteRow(this)'>";
+				document.getElementById("No").value = "";
+				document.getElementById("name").value = "";
+			}
+			function moveDown(b) {
+				var rowindex = b.parentNode.parentNode.rowIndex;
+				document.getElementById("myTable").moveRow(rowindex, rowindex + 1);
+			}
+		</script>
+
+
+
+
+
+
+
